@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(cuid())
+  username   String    @unique
+  password   String
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  geoInfos   GeoInfo[]
+}
+
+model GeoInfo {
+  id         String    @id @default(cuid())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  ip         String    @db.VarChar(45)
+  city       String
+  region     String
+  country    String
+  loc        String
+  org        String?
+  postal     String?
+  timezone   String
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+}
